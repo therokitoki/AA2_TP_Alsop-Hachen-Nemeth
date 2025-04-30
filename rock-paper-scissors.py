@@ -23,7 +23,7 @@ mp_drawing = mp.solutions.drawing_utils
 cap = cv2.VideoCapture(0)
 
 print("ESC para salir y guardar.")
-
+frames_without_updating_label = 0
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -36,25 +36,26 @@ while True:
 
     # Dibuja los puntos de la mano si están presentes
     if res.multi_hand_landmarks:
-        lm = res.multi_hand_landmarks[0].landmark
-        vec = [coord for p in lm for coord in (p.x, p.y)]
-        #vec son los 42 point
-        X = np.array([vec])  # forma (1, 42)
-        pred = model.predict(X, verbose=0)[0]
-        pred_label = labels[np.argmax(pred)]
-        confidence = np.max(pred)
-        cv2.putText(frame,
-            f"{pred_label} ({confidence:.2f})",  # texto con clase + confianza
-            (10, 30),                            # posición (x, y)
-            cv2.FONT_HERSHEY_SIMPLEX,           # tipo de fuente
-            1,                                   # escala
-            (0, 255, 0),                         # color (verde)
-            2)                                   # grosor
-        print(pred_label)
-        for hand_landmarks in res.multi_hand_landmarks:
-            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-
-    #print(res.multi_hand_landmarks)
+        if frames_without_updating_label > 60:
+            lm = res.multi_hand_landmarks[0].landmark
+            vec = [coord for p in lm for coord in (p.x, p.y)]
+            #vec son los 42 point
+            X = np.array([vec])  # forma (1, 42)
+            pred = model.predict(X, verbose=0)[0]
+            pred_label = labels[np.argmax(pred)]
+            confidence = np.max(pred)
+            cv2.putText(frame,
+                f"{pred_label} ({confidence:.2f})",  # texto con clase + confianza
+                (10, 30),                            # posición (x, y)
+                cv2.FONT_HERSHEY_SIMPLEX,           # tipo de fuente
+                1,                                   # escala
+                (0, 255, 0),                         # color (verde)
+                2)                                   # grosor
+            print(pred_label)
+            for hand_landmarks in res.multi_hand_landmarks:
+                mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+        else:
+            frames_without_updating_label += 1
 
     # Mostrar ventana
     cv2.imshow("RPS Fast Collector", frame)

@@ -18,9 +18,11 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_st
 
 # --- Definir el modelo ---
 model = Sequential([
-    Dense(64, activation='relu', input_shape=(42,)),
+    Dense(128, activation='relu', input_shape=(42,)),
     Dropout(0.3),
     Dense(64, activation='relu'),
+    Dropout(0.3),
+    Dense(32, activation='relu'),
     Dropout(0.3),
     Dense(3, activation='softmax')  # 3 clases: piedra, papel, tijera
 ])
@@ -34,7 +36,7 @@ model.summary()
 # --- Entrenamiento ---
 history = model.fit(
     X_train, y_train,
-    epochs=30,
+    epochs=50,
     batch_size=16,
     validation_data=(X_val, y_val)
 )
