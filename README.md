@@ -4,7 +4,7 @@
 
 **Integrantes (Grupo 12):**
 - Alsop, Agustín (A-4651/7)
-- Nemeth, Ulises
+- Nemeth, Ulises (N-1249/1)
 - Hachen, Rocío (H-1184/3)
 
 ---
