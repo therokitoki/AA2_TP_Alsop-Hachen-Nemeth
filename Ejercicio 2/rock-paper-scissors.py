@@ -71,7 +71,7 @@ while True:
             frames_without_updating_label += 1
 
     # Mostrar ventana
-    cv2.imshow("RPS Fast Collector", frame)
+    cv2.imshow("Piedra, Papel y Tijera - Detección en vivo", frame)
 
 
     key = cv2.waitKey(1) & 0xFF
