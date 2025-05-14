@@ -24,7 +24,7 @@ y = np.load("./dataset/rps_labels.npy")    # (N,)
 
 # --- PROCESAMIENTO ---
 X = np.array(X).astype("float32")
-y = to_categorical(y, num_classes=3)  # one-hot encoding - rari no fue hecho por mi esta linea jejex
+y = to_categorical(y, num_classes=3)  # one-hot encoding
 
 # --- DIVISIÓN DE DATOS EN TEST Y TRAIN ---
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -56,4 +56,4 @@ history = model.fit(
 
 # --- GUARDAR EL MODELO ---
 model.save("./modelo/rps_model.h5")
-print("✅ Modelo guardado como rps_model.h5")
+print("Modelo guardado como rps_model.h5")
