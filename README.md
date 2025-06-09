@@ -23,3 +23,7 @@ El objetivo de este ejercicio es implementar un sistema de clasificación de ges
 En este problema, se proporciona un conjunto de datos que contiene imágenes de escenas naturales de todo el mundo. El objetivo es construir un modelo de clasificación utilizando redes neuronales convolucionales (CNN) para clasificar estas imágenes en una de las seis categorías predefinidas.
 
 ---
+## Trabajo Práctico N°2
+
+En proceso
+---
