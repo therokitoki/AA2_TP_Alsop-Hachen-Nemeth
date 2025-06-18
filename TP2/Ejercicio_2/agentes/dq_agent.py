@@ -10,7 +10,7 @@ class QAgent(Agent):
     Completar la discretización del estado y la función de acción.
     """
     def __init__(self, actions, game=None, learning_rate=0.1, discount_factor=0.99,
-                 epsilon=1.0, epsilon_decay=0.995, min_epsilon=0.01, load_q_table_path="flappy_birds_q_table.pkl"):
+                    epsilon=0.01, epsilon_decay=0.995, min_epsilon=0.01, load_q_table_path="flappy_birds_q_table.pkl"):
         super().__init__(actions, game)
         self.lr = learning_rate
         self.gamma = discount_factor
@@ -37,10 +37,10 @@ class QAgent(Agent):
         
         # Parámetros de discretización
         self.num_bins = {
-            'relative_bird_safespace_y': 10,  
-            'relative_bird_nn_safespace_y': 10, 
-            'next_pipe_dist_to_player' : 5,
-            'next_next_pipe_dist_to_player' : 5
+            'relative_bird_safespace_y': 15,
+            'relative_bird_nn_safespace_y': 15,
+            'next_pipe_dist_to_player' : 10,
+            'next_next_pipe_dist_to_player' : 10
         }
 
     def discretize_state(self, state):
@@ -49,17 +49,17 @@ class QAgent(Agent):
         COMPLETAR: Implementar la discretización adecuada para el entorno.
         """
 
-        """ 
+        """
         player_y": self.player.pos_y,
             "player_vel": self.player.vel,
-            
+
             "next_pipe_dist_to_player": next_pipe.x - self.player.pos_x,
             "next_pipe_top_y": next_pipe.gap_start,
-            "next_pipe_bottom_y": next_pipe.gap_start+self.pipe_gap, 
-            
+            "next_pipe_bottom_y": next_pipe.gap_start+self.pipe_gap,
+
             "next_next_pipe_dist_to_player": next_next_pipe.x - self.player.pos_x,
             "next_next_pipe_top_y": next_next_pipe.gap_start,
-            "next_next_pipe_bottom_y": next_next_pipe.gap_start+self.pipe_gap 
+            "next_next_pipe_bottom_y": next_next_pipe.gap_start+self.pipe_gap
 
         """
 
@@ -90,18 +90,24 @@ class QAgent(Agent):
             player_velocity_sign_bin = 1 # Quieto o casi quieto
 
         n_pipe_dist_to_player_normalized = state['next_pipe_dist_to_player'] / self.game_width
-        n_pipe_dist_to_player = int(np.clip(n_pipe_dist_to_player_normalized * self.num_bins['next_pipe_dist_to_player'], 0, self.num_bins['next_pipe_dist_to_player'] - 1))  
+        n_pipe_dist_to_player = int(np.clip(n_pipe_dist_to_player_normalized * self.num_bins['next_pipe_dist_to_player'], 0, self.num_bins['next_pipe_dist_to_player'] - 1))
+
+        if state['next_pipe_dist_to_player'] < 60:
+            pajaro_en_el_nido = 1
+        else:
+            pajaro_en_el_nido = 0
 
         nn_pipe_dist_to_player_normalized = state['next_next_pipe_dist_to_player'] / self.game_width
-        nn_pipe_dist_to_player = int(np.clip(nn_pipe_dist_to_player_normalized * self.num_bins['next_next_pipe_dist_to_player'], 0, self.num_bins['next_next_pipe_dist_to_player'] - 1))   
+        nn_pipe_dist_to_player = int(np.clip(nn_pipe_dist_to_player_normalized * self.num_bins['next_next_pipe_dist_to_player'], 0, self.num_bins['next_next_pipe_dist_to_player'] - 1))
         # Ejemplo:
         # return (player_y_bin, player_vel_bin, ...)
         return (
+            pajaro_en_el_nido,
             scaled_relative_bird_safespace_y_bin,
             scaled_relative_bird_nn_safespace_y_bin,
             player_velocity_sign_bin,
             n_pipe_dist_to_player,
-            nn_pipe_dist_to_player
+            nn_pipe_dist_to_player,
         )
 
     def act(self, state):
@@ -114,14 +120,15 @@ class QAgent(Agent):
         # - Con probabilidad epsilon elegir acción aleatoria
         # - Si no, elegir acción con mayor Q-value
 
-
         discrete_state = self.discretize_state(state)
         if random.random() < self.epsilon:
+            #self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
             return random.choice(self.actions)
         else:
             q_values = self.q_table[discrete_state]
+            #self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
             return self.actions[np.argmax(q_values)]
-        
+
         #raise NotImplementedError("Completar la función de selección de acción (act)")
 
     def update(self, state, action, reward, next_state, done):

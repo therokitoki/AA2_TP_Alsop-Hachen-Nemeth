@@ -12,9 +12,10 @@ actions = env.getActionSet()  # Ej: [None, 119 (w), 115 (s)]
 
 # Crear el agente
 # Descomenta la línea de load_q_table_path si quieres cargar una tabla pre-entrenada
-agent = QAgent(actions, game, epsilon=1.0, min_epsilon=0.05, epsilon_decay=0.995,
-               learning_rate=0.2, discount_factor=0.95,
-               load_q_table_path="flappy_birds_q_table.pkl")
+#modificamos min y decay
+agent = QAgent(actions, game, epsilon=1.0, min_epsilon=0.01, epsilon_decay=0.9997,
+                learning_rate=0.2, discount_factor=0.95,
+                load_q_table_path="flappy_birds_q_table.pkl")
 
 # --- Bucle de Entrenamiento ---
 num_episodes = 20000

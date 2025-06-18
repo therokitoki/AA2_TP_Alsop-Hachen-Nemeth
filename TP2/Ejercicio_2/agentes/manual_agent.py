@@ -16,7 +16,7 @@ class ManualAgent(Agent):
         self.game_width = self.game.width
 
         self.num_bins = {
-            'relative_bird_safespace_y': 10,   
+            'relative_bird_safespace_y': 10,
             'next_pipe_dist_to_player' : 5
         }
 
@@ -29,12 +29,12 @@ class ManualAgent(Agent):
         relative_bird_safespace_y = pipe_safespace_center_y - player_center_y
         scaled_relative_bird_safespace_y = (relative_bird_safespace_y + self.game_height / 2) / self.game_height
         scaled_relative_bird_safespace_y_bin = int(np.clip(scaled_relative_bird_safespace_y * self.num_bins['relative_bird_safespace_y'], 0, self.num_bins['relative_bird_safespace_y'] - 1))
-        
+
         n_pipe_dist_to_player_normalized = state['next_pipe_dist_to_player'] / self.game_width
         n_pipe_dist_to_player = int(np.clip(n_pipe_dist_to_player_normalized * self.num_bins['next_pipe_dist_to_player'], 0, self.num_bins['next_pipe_dist_to_player'] - 1))    
-        
-        print(n_pipe_dist_to_player)
-    
+        print(state['next_pipe_dist_to_player'])
+        #print(n_pipe_dist_to_player)
+
         if not self._space_was_pressed and keys[pygame.K_SPACE]:
             jump = True
         self._space_was_pressed = keys[pygame.K_SPACE]
