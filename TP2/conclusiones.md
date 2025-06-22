@@ -27,13 +27,13 @@ Descripción de la ingeniería de características sobre el estado del juego (di
 Análisis y comparación de los resultados obtenidos para los diferentes agentes.
 
 
-Informacion utilizada:
+### Datos utilizados:
 
 relative_bird_safespace_y => La distancia entre el centro de las tuberias que hay que esquivar
 next_pipe_dist_to_player => La distancia entre el jugador y el proximo obstaculo
 vertical_velocity => La velocidad vertical del jugador
 
-Discretizacion:
+### Discretizacion:
 
 relative_bird_safespace_y
     Valores contemplados: -150 a 150 
@@ -47,6 +47,7 @@ vertical_velocity
     Valores contemplados: -16 a 10
     Cantidad de bins: 10
 
+### Justificación
 El objetivo del juego es no colisionar con ningun obstaculo (tuberias, piso y parte superior de la pantalla).
 Por esto es necesario minimizar la distancia en el eje vertical entre el centro de las tuberias que hay que esquivar y el jugador (relative_bird_safespace_y), pero a esto hay que hacerlo antes de hacer contacto con las tuberias, es decir, antes de que la distancia entre el jugador y el proximo obstaculo sea 0 (next_pipe_dist_to_player) y manteniendo una velocidad vertical lo mas cerca posible de 0 (vertical_velocity) una vez que se logro conseguir la altura deseada. Mientras se cumplan estas tres consignas el jugador va a conseguir puntos.
 
