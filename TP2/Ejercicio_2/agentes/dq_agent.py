@@ -34,7 +34,6 @@ class QAgent(Agent):
         # Parámetros de discretización
         self.num_bins = {
             'relative_bird_safespace_y': 10,
-            'next_relative_bird_safespace_y' : 10,
             'next_pipe_dist_to_player' : 4,
             'vertical_velocity' : 10
         }
