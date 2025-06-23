@@ -49,6 +49,6 @@ class NNAgent(Agent):
         """
         discrete_state = self.discretize_state(state)
         discrete_state=np.array(discrete_state)
-        q_values = self.model.predict(np.expand_dims(discrete_state, axis=0))
+        q_values = self.model.predict(np.expand_dims(discrete_state, axis=0), verbose=0)
         return self.actions[np.argmax(q_values)]
 
