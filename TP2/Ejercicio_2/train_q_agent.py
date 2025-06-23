@@ -13,13 +13,13 @@ actions = env.getActionSet()  # Ej: [None, 119 (w), 115 (s)]
 # Crear el agente
 # Descomenta la línea de load_q_table_path si quieres cargar una tabla pre-entrenada
 # Modificamos min y decay
-agent = QAgent(actions, game, epsilon=1.0, min_epsilon=0.001, epsilon_decay=0.999,
+agent = QAgent(actions, game, epsilon=1.0, min_epsilon=0.01, epsilon_decay=0.995,
                 learning_rate=0.2, discount_factor=0.95,
                 #load_q_table_path="flappy_birds_q_table.pkl",
                 )
 
 # --- Bucle de Entrenamiento ---
-num_episodes = 10000
+num_episodes = 20000
 max_steps_per_episode = 20000
 rewards_all_episodes = []
 
@@ -62,7 +62,8 @@ for episode in range(num_episodes):
     if (episode + 1) % 100 == 0:
         avg_reward = np.mean(rewards_all_episodes[-100:])
         print(f"Episodio: {episode+1}/{num_episodes}, Recompensa Promedio (últimos 100): {avg_reward:.2f}, Epsilon: {agent.epsilon:.3f}")
-        agent.save_q_table(f"q-tables/flappy_birds_q_table_e{episode+1}_r{avg_reward:.2f}.pkl")
+        #agent.save_q_table(f"q-tables/flappy_birds_q_table_e{episode+1}_r{avg_reward:.2f}.pkl")
+        agent.save_q_table(f"q-tables/flappy_birds_q_table.pkl")
 
 print("Entrenamiento completado.")
 agent.save_q_table("src/flappy_birds_q_table_final.pkl")
