@@ -8,7 +8,7 @@ class NNAgent(Agent):
     Agente que utiliza una red neuronal entrenada para aproximar la Q-table.
     La red debe estar guardada como TensorFlow SavedModel.
     """
-    def __init__(self, actions, game=None, model_path='D:\\Git\\AA2_TP_Alsop-Hachen-Nemeth\\TP2\\Ejercicio_2\\flappy_q_nn_model.h5'):
+    def __init__(self, actions, game=None, model_path='src/flappy_q_nn_model.h5'):
         super().__init__(actions, game)
         # Cargar el modelo entrenado
         self.model = tf.keras.models.load_model(model_path, compile=False)

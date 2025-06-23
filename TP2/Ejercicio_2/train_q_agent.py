@@ -61,7 +61,7 @@ for episode in range(num_episodes):
     if (episode + 1) % 100 == 0:
         avg_reward = np.mean(rewards_all_episodes[-100:])
         print(f"Episodio: {episode+1}/{num_episodes}, Recompensa Promedio (últimos 100): {avg_reward:.2f}, Epsilon: {agent.epsilon:.3f}")
-        agent.save_q_table(f"flappy_birds_q_table_e{episode+1}_r{avg_reward:.2f}.pkl")
+        agent.save_q_table(f"q-tables/flappy_birds_q_table_e{episode+1}_r{avg_reward:.2f}.pkl")
 
 print("Entrenamiento completado.")
 agent.save_q_table("flappy_birds_q_table_final.pkl")

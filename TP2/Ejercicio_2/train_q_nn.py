@@ -8,18 +8,17 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 # --- Constantes y Configuración ---
-DATASET_FILE = 'pong_q_expert_dataset.npy'
-MODEL_SAVE_PATH = 'qtable_nn.h5'
+MODEL_SAVE_PATH = 'src/flappy_q_nn_model.h5'
 NUM_ACTIONS =  2 # Subir, bajar es no hacer nada
 
 # Hiperparámetros de entrenamiento
 EPOCHS = 500
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 VALIDATION_SPLIT = 0.2
 RANDOM_STATE = 42 # Para reproducibilidad en shuffle y train_test_split
 
 # --- Cargar Q-table entrenada ---
-QTABLE_PATH = 'flappy_birds_q_table_e16800_r198.71.pkl'  # Cambia el path si es necesario
+QTABLE_PATH = 'src/flappy_birds_q_table_final.pkl'  # Cambia el path si es necesario
 with open(QTABLE_PATH, 'rb') as f:
     q_table = pickle.load(f)
 
@@ -47,6 +46,7 @@ model = keras.Sequential([
     layers.Dense(64, activation='relu'),
     layers.Dense(32, activation='relu'),
     layers.Dense(32, activation='relu'),
+    layers.Dropout(0.5),
     layers.Dense (NUM_ACTIONS)
 ])
 
@@ -102,8 +102,8 @@ plt.show()
 
 # --- Guardar el modelo entrenado ---
 # COMPLETAR: Cambia el nombre si lo deseas
-model.save('flappy_q_nn_model.h5')
-print('Modelo guardado como TensorFlow SavedModel en flappy_q_nn_model/')
+model.save(MODEL_SAVE_PATH)
+print(f'Modelo guardado como TensorFlow SavedModel en {MODEL_SAVE_PATH}')
 
 # --- Notas para los alumnos ---
 # - Puedes modificar la arquitectura de la red y los hiperparámetros.
