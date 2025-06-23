@@ -26,12 +26,37 @@ Dentro del repositorio se debe incluir un archivo conclusiones.md (usando Markdo
 Descripción de la ingeniería de características sobre el estado del juego (discretización).
 Análisis y comparación de los resultados obtenidos para los diferentes agentes.
 
-porque, como y no se mas
+### Datos utilizados:
 
-scaled_relative_bird_safespace_y_bin,
-player_velocity_sign_bin,
-n_pipe_dist_to_player,
+relative_bird_safespace_y => La distancia entre el centro de las tuberias que hay que esquivar
 
+next_pipe_dist_to_player => La distancia entre el jugador y el proximo obstaculo
 
+vertical_velocity => La velocidad vertical del jugador
 
-https://docs.google.com/spreadsheets/d/1G9KOuP6hWVeb40bogaBd3I6ZC9aviN-ZYciNbJdZDDc/edit?usp=sharing
+### Discretizacion:
+
+relative_bird_safespace_y
+
+    Valores contemplados: -150 a 150 
+
+    Cantidad de bins: 10
+
+next_pipe_dist_to_player
+
+    Valores contemplados: 0 a 300
+
+    Cantidad de bins: 4
+
+vertical_velocity
+
+    Valores contemplados: -16 a 10
+
+    Cantidad de bins: 10
+
+### Justificación
+Dado el objetivo del juego (no colisionar con ningun obstaculo: tuberias, piso y parte superior de la pantalla), observamos que es necesario minimizar la distancia en el eje vertical entre el centro de las tuberias que hay que esquivar y el jugador (relative_bird_safespace_y), pero a esto hay que hacerlo antes de hacer contacto con las tuberias, es decir, antes de que la distancia entre el jugador y el proximo obstaculo sea 0 (next_pipe_dist_to_player) y manteniendo una velocidad vertical lo mas cerca posible de 0 (vertical_velocity) una vez que se logro conseguir la altura deseada. Mientras se cumplan estas tres consignas el jugador va a conseguir puntos.
+
+Intentamos agregar mas informacion que intuimos que iba a mejorar la performance del agente, como por ejemplo la distancia en el eje vertical del proximo obstaculo, antes de esquivar el actual (next_relative_bird_safespace_y) pero esto generaba peores resultados.
+
+Creemos que esto se debe a que al agregar esta variable se vuelve mucho más grande el espacio de estados posibles, haciendo más difícil que el agente pueda aprender de forma consistente. Además, esta información no era realmente útil en el momento en que se la tenía en cuenta, porque todavía no se había superado el primer obstáculo, y lo único que lograba era confundir al agente. También notamos que se empezaba a comportar de forma más errática, probablemente porque tenía en cuenta cosas que todavía no influían directamente en la jugada actual. Por eso, decidimos mantener el modelo más simple y usar solo variables relacionadas al obstáculo actual y al movimiento inmediato del jugador.
