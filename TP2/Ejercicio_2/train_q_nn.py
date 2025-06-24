@@ -38,16 +38,23 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_st
 
 
 # --- Definir la red neuronal ---
+# model = keras.Sequential([
+#     layers.Input(shape=(X.shape[1],)),
+#     layers.Dense(128, activation='relu'),
+#     layers.Dense(128, activation='relu'),
+#     layers.Dense(64, activation='relu'),
+#     layers.Dense(64, activation='relu'),
+#     layers.Dense(32, activation='relu'),
+#     layers.Dense(32, activation='relu'),
+#     layers.Dropout(0.5),
+#     layers.Dense(NUM_ACTIONS)
+# ])
 model = keras.Sequential([
     layers.Input(shape=(X.shape[1],)),
     layers.Dense(128, activation='relu'),
     layers.Dense(128, activation='relu'),
-    layers.Dense(64, activation='relu'),
-    layers.Dense(64, activation='relu'),
-    layers.Dense(32, activation='relu'),
-    layers.Dense(32, activation='relu'),
     layers.Dropout(0.5),
-    layers.Dense (NUM_ACTIONS)
+    layers.Dense(NUM_ACTIONS)
 ])
 
 optimizer = keras.optimizers.Adam(learning_rate=0.001)
