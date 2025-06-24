@@ -28,7 +28,7 @@ Análisis y comparación de los resultados obtenidos para los diferentes agentes
 
 ### Datos utilizados:
 
-relative_bird_safespace_y => La distancia entre el centro de las tuberias que hay que esquivar
+relative_bird_safespace_y => La distancia entre el centro de las tuberias que hay que esquivar y el jugador
 
 next_pipe_dist_to_player => La distancia entre el jugador y el proximo obstaculo
 
@@ -40,19 +40,19 @@ relative_bird_safespace_y
 
     Valores contemplados: -150 a 150 
 
-    Cantidad de bins: 10
+    Cantidad de bins: 30
 
 next_pipe_dist_to_player
 
     Valores contemplados: 0 a 300
 
-    Cantidad de bins: 4
+    Cantidad de bins: 15
 
 vertical_velocity
 
     Valores contemplados: -16 a 10
 
-    Cantidad de bins: 10
+    Cantidad de bins: 15
 
 ### Justificación
 Dado el objetivo del juego (no colisionar con ningun obstaculo: tuberias, piso y parte superior de la pantalla), observamos que es necesario minimizar la distancia en el eje vertical entre el centro de las tuberias que hay que esquivar y el jugador (relative_bird_safespace_y), pero a esto hay que hacerlo antes de hacer contacto con las tuberias, es decir, antes de que la distancia entre el jugador y el proximo obstaculo sea 0 (next_pipe_dist_to_player) y manteniendo una velocidad vertical lo mas cerca posible de 0 (vertical_velocity) una vez que se logro conseguir la altura deseada. Mientras se cumplan estas tres consignas el jugador va a conseguir puntos.

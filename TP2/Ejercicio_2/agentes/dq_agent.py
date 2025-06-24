@@ -10,7 +10,7 @@ class QAgent(Agent):
     Completar la discretización del estado y la función de acción.
     """
     def __init__(self, actions, game=None, learning_rate=0.1, discount_factor=0.95,
-                    epsilon=0, epsilon_decay=0.995, min_epsilon=0.01, load_q_table_path="src/flappy_birds_q_table_final.pkl"):
+                    epsilon=0, epsilon_decay=0.995, min_epsilon=0, load_q_table_path="src/flappy_birds_q_table_final.pkl"):
         super().__init__(actions, game)
         self.lr = learning_rate
         self.gamma = discount_factor
@@ -33,36 +33,27 @@ class QAgent(Agent):
             self.q_table = defaultdict(lambda: np.zeros(len(self.actions)))
         # Parámetros de discretización
         self.num_bins = {
-            'relative_bird_safespace_y': 20,
-            'next_pipe_dist_to_player' : 10,
-            'vertical_velocity' : 10,
-            'next_pipe_top_y_position': 20,
-            'next_pipe_bottom_y_position': 20,
-            'player_center_y': 20
+            'relative_bird_safespace_y': 30,
+            'next_pipe_dist_to_player' : 15,
+            'vertical_velocity' : 15
         }
 
     def discretize_state(self, state):
         """
         Discretiza el estado continuo en un estado discreto (tupla).
         """
-        #print(f"Discretizando estado: {state}")
         player_center_y = state['player_y']
         pipe_safespace_center_y = state['next_pipe_top_y'] + ((state['next_pipe_bottom_y']-state['next_pipe_top_y'])//2)
         relative_bird_safespace_y = pipe_safespace_center_y - player_center_y
         next_pipe_dist_to_player = state['next_pipe_dist_to_player']
         vertical_velocity = state['player_vel']
-        next_pipe_top_y_position = state['next_pipe_top_y']
-        next_pipe_bottom_y_position = state['next_pipe_bottom_y']
 
         # Discretización en bins
-        rel_y_bin = int(np.digitize(relative_bird_safespace_y, np.linspace(0, self.game_height, self.num_bins['relative_bird_safespace_y'])))
-        dist_bin = int(np.digitize(next_pipe_dist_to_player, np.linspace(0, self.game_width, self.num_bins['next_pipe_dist_to_player'])))
+        rel_y_bin = int(np.digitize(relative_bird_safespace_y, np.linspace(-150, 150, self.num_bins['relative_bird_safespace_y'])))
+        dist_bin = int(np.digitize(next_pipe_dist_to_player, np.linspace(0, 300, self.num_bins['next_pipe_dist_to_player'])))
         vel_bin = int(np.digitize(vertical_velocity, np.linspace(-16, 10, self.num_bins['vertical_velocity'])))
-        top_y_bin = int(np.digitize(next_pipe_top_y_position, np.linspace(0, self.game_height, self.num_bins['next_pipe_top_y_position'])))
-        bottom_y_bin = int(np.digitize(next_pipe_bottom_y_position, np.linspace(0, self.game_height, self.num_bins['next_pipe_bottom_y_position'])))
-        #player_y = int(np.digitize(player_center_y, np.linspace(0, self.game_height, self.num_bins['player_center_y'])))
 
-        return (rel_y_bin,dist_bin,vel_bin,top_y_bin,bottom_y_bin)
+        return (rel_y_bin, dist_bin, vel_bin)
 
     def act(self, state):
         """
