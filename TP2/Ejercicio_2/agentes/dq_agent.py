@@ -60,7 +60,6 @@ class QAgent(Agent):
         vel_bin = int(np.digitize(vertical_velocity, np.linspace(-16, 10, self.num_bins['vertical_velocity'])))
         top_y_bin = int(np.digitize(next_pipe_top_y_position, np.linspace(0, self.game_height, self.num_bins['next_pipe_top_y_position'])))
         bottom_y_bin = int(np.digitize(next_pipe_bottom_y_position, np.linspace(0, self.game_height, self.num_bins['next_pipe_bottom_y_position'])))
-        #player_y = int(np.digitize(player_center_y, np.linspace(0, self.game_height, self.num_bins['player_center_y'])))
 
         return (rel_y_bin,dist_bin,vel_bin,top_y_bin,bottom_y_bin)
 
@@ -76,14 +75,11 @@ class QAgent(Agent):
 
         discrete_state = self.discretize_state(state)
         if random.random() < self.epsilon:
-            #self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
             return random.choice(self.actions)
         else:
             q_values = self.q_table[discrete_state]
-            #self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
             return self.actions[np.argmax(q_values)]
 
-        #raise NotImplementedError("Completar la función de selección de acción (act)")
 
     def update(self, state, action, reward, next_state, done):
         """

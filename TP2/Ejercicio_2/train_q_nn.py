@@ -36,19 +36,6 @@ y = np.array(y)
 # --- Dividir en entrenamiento y validación ---
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_state=RANDOM_STATE)
 
-
-# --- Definir la red neuronal ---
-# model = keras.Sequential([
-#     layers.Input(shape=(X.shape[1],)),
-#     layers.Dense(128, activation='relu'),
-#     layers.Dense(128, activation='relu'),
-#     layers.Dense(64, activation='relu'),
-#     layers.Dense(64, activation='relu'),
-#     layers.Dense(32, activation='relu'),
-#     layers.Dense(32, activation='relu'),
-#     layers.Dropout(0.5),
-#     layers.Dense(NUM_ACTIONS)
-# ])
 model = keras.Sequential([
     layers.Input(shape=(X.shape[1],)),
     layers.Dense(128, activation='relu'),
@@ -60,17 +47,12 @@ model = keras.Sequential([
 optimizer = keras.optimizers.Adam(learning_rate=0.001)
 model.compile(optimizer=optimizer, loss='mse', metrics=['mae'])
 
-# --- Callbacks para early stopping ---
-#early_stop = callbacks.EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
-
-
 # --- Entrenar la red neuronal ---
 history = model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
     epochs=EPOCHS,
     batch_size=BATCH_SIZE,
-    #callbacks=[early_stop],
     verbose=1
 )
 
@@ -111,10 +93,4 @@ plt.show()
 # COMPLETAR: Cambia el nombre si lo deseas
 model.save(MODEL_SAVE_PATH)
 print(f'Modelo guardado como TensorFlow SavedModel en {MODEL_SAVE_PATH}')
-
-# --- Notas para los alumnos ---
-# - Puedes modificar la arquitectura de la red y los hiperparámetros.
-# - Puedes usar la red entrenada para aproximar la Q-table y luego usarla en un agente tipo DQN.
-# - Si tu estado es una tupla de enteros, no hace falta normalizar, pero puedes probarlo.
-# - Si tienes dudas sobre cómo usar el modelo para predecir acciones, consulta la documentación de Keras.
 

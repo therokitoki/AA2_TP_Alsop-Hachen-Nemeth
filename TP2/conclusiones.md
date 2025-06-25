@@ -37,7 +37,7 @@ vertical_velocity => La velocidad vertical del jugador
 
 relative_bird_safespace_y
 
-    Valores contemplados: -150 a 150 
+    Valores contemplados: -150 a 150
 
     Cantidad de bins: 30
 
@@ -70,3 +70,32 @@ En un intento de mejorar el rendimiento del agente, incorporamos una nueva varia
 En base a estas observaciones, decidimos mantener el modelo lo más simple posible, limitándonos a variables asociadas exclusivamente al obstáculo presente y al movimiento inmediato del jugador. Esto resultó en un comportamiento más consistente y efectivo del agente.
 
 La discretización de nuestro agente tiene 3 variables con 30, 15 y 15 bins cada una respectivamente, pudiendo haber entonces una totalidad de `30 × 15 × 15 = 6750` estados en total, una considerable reducción de la cantidad total de estados en un esquema continuo.
+
+
+### Optimizado (Extra)
+
+Una vez finalizado el trabajo practico se decidio seguir jugando cambiando y agregando ya sea estados discretos como numeros de bins para cada uno de esos estados, ademas se implemento un onehot a los mismos antes de entrenar la red neuronal tratando de alcanzar el máximo puntaje posible.
+
+La ultima version de esta optimizacion tuvo los siquientes parametros
+
+relative_bird_safespace_y
+
+    Valores contemplados: -150 a 150
+
+    Cantidad de bins: 30
+
+next_pipe_dist_to_player
+
+    Valores contemplados: 0 a 300
+
+    Cantidad de bins: 15
+
+vertical_velocity
+
+    Valores contemplados: -16 a 10
+
+    Cantidad de bins: 15
+
+Bajo los mismos el pajaro llego a tener valores de reward de mas de 10000 puntos.
+
+En la carpeta "Optimizado" se encuentra los archivos modificados utilizados para lograr este score
