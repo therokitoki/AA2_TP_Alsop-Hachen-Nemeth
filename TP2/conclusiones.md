@@ -7,7 +7,6 @@ Alumnos: Agustin Alsop, Rocio Hachen, Ulises Nemeth
 ### Descripción:
 Entrenar agentes que puedan jugar Flappy Bird usando diferentes enfoques con PyGame Learning Environment.
 
-
 ### Objetivo:
 El objetivo de este ejercicio es entrenar agentes para resolver videojuegos sencillos usando Q-Learning y la librería PLE. En primer lugar, usar Q-learning para entrenar a un agente para jugar Flappy Bird. Luego, entrenar a otro agente usando Deep Q-learning y la Q-table del agente provisto.
 
@@ -55,8 +54,19 @@ vertical_velocity
     Cantidad de bins: 15
 
 ### Justificación
-Dado el objetivo del juego (no colisionar con ningun obstaculo: tuberias, piso y parte superior de la pantalla), observamos que es necesario minimizar la distancia en el eje vertical entre el centro de las tuberias que hay que esquivar y el jugador (relative_bird_safespace_y), pero a esto hay que hacerlo antes de hacer contacto con las tuberias, es decir, antes de que la distancia entre el jugador y el proximo obstaculo sea 0 (next_pipe_dist_to_player) y manteniendo una velocidad vertical lo mas cerca posible de 0 (vertical_velocity) una vez que se logro conseguir la altura deseada. Mientras se cumplan estas tres consignas el jugador va a conseguir puntos.
 
-Intentamos agregar mas informacion que intuimos que iba a mejorar la performance del agente, como por ejemplo la distancia en el eje vertical del proximo obstaculo, antes de esquivar el actual (next_relative_bird_safespace_y) pero esto generaba peores resultados.
+Dado que el objetivo del juego es evitar colisiones con los obstáculos (tuberías, suelo y techo), observamos que el agente debe priorizar tres aspectos fundamentales:
+- Minimizar la distancia vertical entre el jugador y el centro del espacio seguro entre las tuberías (`relative_bird_safespace_y`).
+- Alcanzar esa altura antes de que la distancia horizontal al próximo obstáculo sea cero (`next_pipe_dist_to_player`).
+- Estabilizar la velocidad vertical (`vertical_velocity`) alrededor de cero una vez alcanzada la altura deseada, para mantener el control.
 
-Creemos que esto se debe a que al agregar esta variable se vuelve mucho más grande el espacio de estados posibles, haciendo más difícil que el agente pueda aprender de forma consistente. Además, esta información no era realmente útil en el momento en que se la tenía en cuenta, porque todavía no se había superado el primer obstáculo, y lo único que lograba era confundir al agente. También notamos que se empezaba a comportar de forma más errática, probablemente porque tenía en cuenta cosas que todavía no influían directamente en la jugada actual. Por eso, decidimos mantener el modelo más simple y usar solo variables relacionadas al obstáculo actual y al movimiento inmediato del jugador.
+Mientras se cumplan estas tres condiciones, el jugador debería poder evitar colisiones y, por lo tanto, ganar puntos.
+
+En un intento de mejorar el rendimiento del agente, incorporamos una nueva variable: la distancia vertical al espacio seguro de la tubería que viene luego de la actual (`next_relative_bird_safespace_y`). Sin embargo, esto provocó una disminución en la performance. Creemos que esto se debe a dos motivos principales:
+
+1. Por un lado, la incorporación de esta variable incrementó significativamente el tamaño del espacio de estados, dificultando el aprendizaje estable del agente.
+2. Por otro lado, la información que aporta esta variable no es útil en el momento en que se la introduce, ya que el obstáculo actual aún no fue superado. Esto parece inducir al agente a tomar decisiones prematuras o erráticas, al considerar elementos que aún no influyen directamente en la jugada actual.
+
+En base a estas observaciones, decidimos mantener el modelo lo más simple posible, limitándonos a variables asociadas exclusivamente al obstáculo presente y al movimiento inmediato del jugador. Esto resultó en un comportamiento más consistente y efectivo del agente.
+
+La discretización de nuestro agente tiene 3 variables con 30, 15 y 15 bins cada una respectivamente, pudiendo haber entonces una totalidad de `30 × 15 × 15 = 6750` estados en total, una considerable reducción de la cantidad total de estados en un esquema continuo.
