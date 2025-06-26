@@ -37,30 +37,43 @@ vertical_velocity => La velocidad vertical del jugador
 
 relative_bird_safespace_y
 
-    Valores contemplados: -150 a 150
+    Valores contemplados: 0 a Alto del juego
 
-    Cantidad de bins: 30
+    Cantidad de bins: 20
 
 next_pipe_dist_to_player
 
-    Valores contemplados: 0 a 300
+    Valores contemplados: 0 a ancho del juego
 
-    Cantidad de bins: 15
+    Cantidad de bins: 10
 
 vertical_velocity
 
     Valores contemplados: -16 a 10
 
-    Cantidad de bins: 15
+    Cantidad de bins: 10
+
+next_pipe_top_y_position
+
+    Valores contemplados: 0 a Alto del juego
+
+    Cantidad de bins: 20
+
+next_pipe_bottom_y_position
+
+    Valores contemplados: 0 a Alto del juego
+
+    Cantidad de bins: 20
 
 ### Justificación
 
-Dado que el objetivo del juego es evitar colisiones con los obstáculos (tuberías, suelo y techo), observamos que el agente debe priorizar tres aspectos fundamentales:
+Dado que el objetivo del juego es evitar colisiones con los obstáculos (tuberías, suelo y techo), observamos que el agente debe priorizar cinco aspectos fundamentales:
 - Minimizar la distancia vertical entre el jugador y el centro del espacio seguro entre las tuberías (`relative_bird_safespace_y`).
 - Alcanzar esa altura antes de que la distancia horizontal al próximo obstáculo sea cero (`next_pipe_dist_to_player`).
 - Estabilizar la velocidad vertical (`vertical_velocity`) alrededor de cero una vez alcanzada la altura deseada, para mantener el control.
+- Ademas de conocer el centro de la zona seguro necesita saber con margen puede alejarse medio `next_pipe_top_y_position` y `next_pipe_bottom_y_position`
 
-Mientras se cumplan estas tres condiciones, el jugador debería poder evitar colisiones y, por lo tanto, ganar puntos.
+Mientras se cumplan estas cuatro condiciones, el jugador debería poder evitar colisiones y, por lo tanto, ganar puntos.
 
 En un intento de mejorar el rendimiento del agente, incorporamos una nueva variable: la distancia vertical al espacio seguro de la tubería que viene luego de la actual (`next_relative_bird_safespace_y`). Sin embargo, esto provocó una disminución en la performance. Creemos que esto se debe a dos motivos principales:
 
@@ -69,7 +82,7 @@ En un intento de mejorar el rendimiento del agente, incorporamos una nueva varia
 
 En base a estas observaciones, decidimos mantener el modelo lo más simple posible, limitándonos a variables asociadas exclusivamente al obstáculo presente y al movimiento inmediato del jugador. Esto resultó en un comportamiento más consistente y efectivo del agente.
 
-La discretización de nuestro agente tiene 3 variables con 30, 15 y 15 bins cada una respectivamente, pudiendo haber entonces una totalidad de `30 × 15 × 15 = 6750` estados en total, una considerable reducción de la cantidad total de estados en un esquema continuo.
+La discretización de nuestro agente tiene 3 variables con 30, 15 y 15 bins cada una respectivamente, pudiendo haber entonces una totalidad de `20 × 10 × 10 x 20 x 20 = 800000` estados en total.
 
 
 ### Optimizado (Extra)
