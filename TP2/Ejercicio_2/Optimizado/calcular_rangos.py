@@ -31,4 +31,4 @@ def guardar_rangos_en_txt(output_path='src/state_ranges.txt'):
     with open(output_path, 'w') as f:
         for key in state_keys:
             f.write(f"{key}: min = {min_vals[key]:.4f}, max = {max_vals[key]:.4f}\n")
-    print(f"\n✅ Rangos guardados en '{output_path}'")
+    print(f"\n Rangos guardados en '{output_path}'")
