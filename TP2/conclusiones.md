@@ -25,7 +25,7 @@ Dentro del repositorio se debe incluir un archivo conclusiones.md (usando Markdo
 Descripción de la ingeniería de características sobre el estado del juego (discretización).
 Análisis y comparación de los resultados obtenidos para los diferentes agentes.
 
-### Datos utilizados:
+### Variables utilizadas:
 
 relative_bird_safespace_y => La distancia entre el centro de las tuberias que hay que esquivar y el jugador
 
@@ -33,82 +33,87 @@ next_pipe_dist_to_player => La distancia entre el jugador y el proximo obstaculo
 
 vertical_velocity => La velocidad vertical del jugador
 
+next_pipe_top_y_position =>
+
+next_pipe_bottom_y_position =>
+
 ### Discretizacion:
 
-relative_bird_safespace_y
+`rel_y_bin`
+- Dato utilizado: relative_bird_safespace_y
+- Valores contemplados: 0 a 512
+- Cantidad de bins: 20
 
-    Valores contemplados: 0 a Alto del juego
+`dist_bin`
+- Dato utilizado: next_pipe_dist_to_player
+- Valores contemplados: 0 a 288
+- Cantidad de bins: 10
 
-    Cantidad de bins: 20
+`vel_bin`
+- Dato utilizado: vertical_velocity
+- Valores contemplados: -16 a 10
+- Cantidad de bins: 10
 
-next_pipe_dist_to_player
+`top_y_bin`
+- Dato utilizado: next_pipe_top_y_position
+- Valores contemplados: 0 a 512
+- Cantidad de bins: 20
 
-    Valores contemplados: 0 a ancho del juego
-
-    Cantidad de bins: 10
-
-vertical_velocity
-
-    Valores contemplados: -16 a 10
-
-    Cantidad de bins: 10
-
-next_pipe_top_y_position
-
-    Valores contemplados: 0 a Alto del juego
-
-    Cantidad de bins: 20
-
-next_pipe_bottom_y_position
-
-    Valores contemplados: 0 a Alto del juego
-
-    Cantidad de bins: 20
+`bottom_y_bin`
+- Dato utilizado: next_pipe_bottom_y_position
+- Valores contemplados: 0 a 512
+- Cantidad de bins: 20
 
 ### Justificación
 
-Dado que el objetivo del juego es evitar colisiones con los obstáculos (tuberías, suelo y techo), observamos que el agente debe priorizar cinco aspectos fundamentales:
+Dado que el objetivo del juego es evitar colisiones con los obstáculos (tuberías, suelo y techo), observamos que el agente debe priorizar cuatro aspectos fundamentales:
 - Minimizar la distancia vertical entre el jugador y el centro del espacio seguro entre las tuberías (`relative_bird_safespace_y`).
-- Alcanzar esa altura antes de que la distancia horizontal al próximo obstáculo sea cero (`next_pipe_dist_to_player`).
+- Alcanzar esa altura antes de que la distancia horizontal a la próxima tubería sea cero (`next_pipe_dist_to_player`).
 - Estabilizar la velocidad vertical (`vertical_velocity`) alrededor de cero una vez alcanzada la altura deseada, para mantener el control.
-- Ademas de conocer el centro de la zona seguro necesita saber con margen puede alejarse medio `next_pipe_top_y_position` y `next_pipe_bottom_y_position`
+- Conocer la posición vertical exacta del borde superior (`next_pipe_top_y_position`) y del borde inferior (`next_pipe_bottom_y_position`).
 
 Mientras se cumplan estas cuatro condiciones, el jugador debería poder evitar colisiones y, por lo tanto, ganar puntos.
 
-En un intento de mejorar el rendimiento del agente, incorporamos una nueva variable: la distancia vertical al espacio seguro de la tubería que viene luego de la actual (`next_relative_bird_safespace_y`). Sin embargo, esto provocó una disminución en la performance. Creemos que esto se debe a dos motivos principales:
+En un intento de mejorar el rendimiento del agente, incorporamos una nueva variable: la distancia vertical al espacio seguro de la tubería que sigue a la actual (`next_relative_bird_safespace_y`). Sin embargo, esto provocó una disminución en el desempeño del agente. Creemos que esto se debe a dos motivos principales:
 
-1. Por un lado, la incorporación de esta variable incrementó significativamente el tamaño del espacio de estados, dificultando el aprendizaje estable del agente.
-2. Por otro lado, la información que aporta esta variable no es útil en el momento en que se la introduce, ya que el obstáculo actual aún no fue superado. Esto parece inducir al agente a tomar decisiones prematuras o erráticas, al considerar elementos que aún no influyen directamente en la jugada actual.
+1. La incorporación de esta variable incrementaba aun más el tamaño del espacio de estados, lo que podía dificultar el aprendizaje del agente.
+2. La información que aporta esta variable no es útil en el momento en que se la introduce, ya que el obstáculo actual aún no fue superado. Esto parece inducir al agente a tomar decisiones prematuras o erráticas.
 
-En base a estas observaciones, decidimos mantener el modelo lo más simple posible, limitándonos a variables asociadas exclusivamente al obstáculo presente y al movimiento inmediato del jugador. Esto resultó en un comportamiento más consistente y efectivo del agente.
+En base a estas observaciones, decidimos mantener el modelo lo más simple posible, limitándonos a variables asociadas exclusivamente a la tubería próxima y al movimiento inmediato del jugador. Esta versión demostró ser mucho más consistente y efectiva. De hecho, en la sección de "Optimización "de este documento se muestra cómo, usando solo tres variables y un espacio de estados mucho más reducido, se lograron resultados sobresalientes. 
 
-La discretización de nuestro agente tiene 3 variables con 30, 15 y 15 bins cada una respectivamente, pudiendo haber entonces una totalidad de `20 × 10 × 10 x 20 x 20 = 800000` estados en total.
+No obstante, esa versión más simple requería una codificación one-hot para poder entrenar correctamente la red neuronal, lo cual estaba fuera del alcance planteado inicialmente. Por ello, en esta sección decidimos adoptar la siguiente mejor versión: un modelo con cinco variables discretizadas, que si bien amplía el espacio de estados, permite un gran desempeño tanto en el agente Q como en el agente con red neuronal.
 
+La discretización actual considera las siguientes variables y particiones:
 
-### Optimizado (Extra)
+- `rel_y_bin`: 20 bins
+- `dist_bin`: 10 bins
+- `vel_bin`: 10 bins
+- `top_y_bin`: 20 bins
+- `bottom_y_bin`: 20 bins
 
-Una vez finalizado el trabajo practico se decidio seguir jugando cambiando y agregando ya sea estados discretos como numeros de bins para cada uno de esos estados, ademas se implemento un onehot a los mismos antes de entrenar la red neuronal tratando de alcanzar el máximo puntaje posible.
+Lo que da un total de:
+`20 × 10 × 10 × 20 × 20 = 800,000` estados posibles.
 
-La ultima version de esta optimizacion tuvo los siquientes parametros
+### Optimización (Extra)
 
-relative_bird_safespace_y
+Como se mencionó anteriormente, una vez finalizado el trabajo práctico, se decidió continuar explorando variantes del modelo, modificando tanto las variables como la cantidad de bins de discretización. Además, se implementó una codificación one-hot para los estados, lo que permitió entrenar la red neuronal de forma más precisa.
 
-    Valores contemplados: -150 a 150
+La ultima version de esta optimizacion incluyó las siguientes variables discretizadas:
 
-    Cantidad de bins: 30
+`rel_y_bin`
+- Dato utilizado: relative_bird_safespace_y
+- Valores contemplados: -150 a 150
+- Cantidad de bins: 30
 
-next_pipe_dist_to_player
+`dist_bin`
+- Dato utilizado: next_pipe_dist_to_player
+- Valores contemplados: 0 a 300
+- Cantidad de bins: 15
 
-    Valores contemplados: 0 a 300
+`vel_bin`
+- Dato utilizado: vertical_velocity
+- Valores contemplados: -16 a 10
+- Cantidad de bins: 15
 
-    Cantidad de bins: 15
-
-vertical_velocity
-
-    Valores contemplados: -16 a 10
-
-    Cantidad de bins: 15
-
-Bajo los mismos el pajaro llego a tener valores de reward de mas de 10000 puntos.
-
-En la carpeta "Optimizado" se encuentra los archivos modificados utilizados para lograr este score
+Así se cuenta con `30 × 15 × 15 = 6,750` estados posibles. Con esta discretización, el agente fue capaz de obtener recompensas acumuladas superiores a 10,000 puntos, lo cual representa un desempeño excepcional.
+Todos los archivos modificados y utilizados para alcanzar estos resultados se encuentran en la carpeta "Optimizado".

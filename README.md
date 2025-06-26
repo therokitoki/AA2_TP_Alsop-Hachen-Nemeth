@@ -24,6 +24,17 @@ En este problema, se proporciona un conjunto de datos que contiene imágenes de 
 
 ---
 ## Trabajo Práctico N°2
+### Problema 1
+#### Agente Q-Learning (Corresponde al Ejercicio A del README.md):
 
-En proceso
+- Implementación del Agente.
+- Entrenamiento del Agente.
+- Prueba del Agente Entrenado
+
+### Problema 2
+#### Agente Basado en Red Neuronal (Corresponde al Ejercicio B del README.md):
+
+- Entrenamiento de la Red Neuronal.
+- Implementación del Agente Neuronal.
+- Prueba del Agente Neuronal
 ---
