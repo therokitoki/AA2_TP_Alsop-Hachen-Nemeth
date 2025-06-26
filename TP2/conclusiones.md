@@ -94,6 +94,49 @@ La discretización actual considera las siguientes variables y particiones:
 Lo que da un total de:
 `20 × 10 × 10 × 20 × 20 = 800,000` estados posibles.
 
+### Resultados entre QAgent y NNAgent
+
+#### Qagent
+
+```
+--- Ejecutando agente ---
+Recompensa episodio: -2.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 443.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 827.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 36.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 137.0
+```
+#### NNagent
+
+```
+--- Ejecutando agente ---
+Recompensa episodio: 114.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 773.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 93.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 125.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 63.0
+```
+#### Conclusiones
+
+Ambos modelos funcionaron correctamente y arrojaron resultados muy positivos. El modelo NNAgent requiere mayor carga de hardware, ya que debe realizar inferencias en cada estado, mientras que el QAgent simplemente consulta una tabla. Desde el punto de vista teórico, ante la aparición de estados nuevos, el QAgent no cuenta con una decisión predefinida, mientras que el NNAgent, al utilizar redes neuronales, es capaz de aproximarse a una mejor decisión.
+
+
 ### Optimización (Extra)
 
 Como se mencionó anteriormente, una vez finalizado el trabajo práctico, se decidió continuar explorando variantes del modelo, modificando tanto las variables como la cantidad de bins de discretización. Además, se implementó una codificación one-hot para los estados, lo que permitió entrenar la red neuronal de forma más precisa.
