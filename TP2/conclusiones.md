@@ -33,9 +33,9 @@ next_pipe_dist_to_player => La distancia entre el jugador y el proximo obstaculo
 
 vertical_velocity => La velocidad vertical del jugador
 
-next_pipe_top_y_position =>
+next_pipe_top_y_position => La altura de la tuberia superior
 
-next_pipe_bottom_y_position =>
+next_pipe_bottom_y_position => La altura de la tuberia inferior
 
 ### Discretizacion:
 
@@ -139,24 +139,81 @@ Ambos modelos funcionaron correctamente y arrojaron resultados muy positivos. El
 
 ### Optimización (Extra)
 
-Como se mencionó anteriormente, una vez finalizado el trabajo práctico, se decidió continuar explorando variantes del modelo, modificando tanto las variables como la cantidad de bins de discretización. Además, se implementó una codificación one-hot para los estados, lo que permitió entrenar la red neuronal de forma más precisa.
 
-La ultima version de esta optimizacion incluyó las siguientes variables discretizadas:
+Como se mencionó anteriormente, una vez finalizado el trabajo práctico, se decidió continuar explorando variantes del modelo, modificando tanto las variables como la cantidad de bins de discretización. Además, se implementó una codificación *one-hot* para los estados, lo que permitió entrenar la red neuronal de forma más precisa.
+
+La última versión de esta optimización incluyó las siguientes variables discretizadas:
 
 `rel_y_bin`
-- Dato utilizado: relative_bird_safespace_y
+
+- Dato utilizado: `relative_bird_safespace_y`
 - Valores contemplados: -150 a 150
 - Cantidad de bins: 30
 
 `dist_bin`
-- Dato utilizado: next_pipe_dist_to_player
+
+- Dato utilizado: `next_pipe_dist_to_player`
 - Valores contemplados: 0 a 300
 - Cantidad de bins: 15
 
 `vel_bin`
-- Dato utilizado: vertical_velocity
+
+- Dato utilizado: `vertical_velocity`
 - Valores contemplados: -16 a 10
 - Cantidad de bins: 15
 
-Así se cuenta con `30 × 15 × 15 = 6,750` estados posibles. Con esta discretización, el agente fue capaz de obtener recompensas acumuladas superiores a 10,000 puntos, lo cual representa un desempeño excepcional.
+Así, se cuenta con `30 × 15 × 15 = 6.750` estados posibles. Con esta discretización, el agente fue capaz de obtener recompensas acumuladas superiores a 10.000 puntos, lo cual representa un desempeño excepcional.
+
+Para garantizar un uso eficiente de los bins durante la discretización de los estados, se registraron los valores máximos y mínimos observados para cada variable del entorno jugando con `manual_agent` y haciendo que el jugador pase por todos los extremos que le interesaban a estas tres variables (usando `calcular_rangos.py`). Dejamos afuera varios valores de los extremos en la variable en la que más precisión necesitábamos: `relative_bird_safespace_y`. Esta estrategia permitió ajustar de forma precisa la cantidad de bins necesarios, incrementándolos de forma significativa para capturar mejor la variabilidad del entorno. Esta precisión es clave para el rendimiento del agente, dado que el juego requiere decisiones altamente sensibles.
+
+- `relative_bird_safespace_y`: min = -280.0000, max = 196.0000
+- `next_pipe_dist_to_player`: min = 1.0000, max = 309.0000
+- `vertical_velocity`: min = -16.0000, max = 10.0000
+
 Todos los archivos modificados y utilizados para alcanzar estos resultados se encuentran en la carpeta "Optimizado".
+
+Acá hay una muestra comparando los tiempos de inferencia (decisión) de las dos versiones que determinan la acción óptima a tomar. La versión optimizada muestra mejoras significativas en el rendimiento, 11 veces más rápida.
+
+| Versión Entregada (s)  | Versión Optimizada (s)  |
+|------------------------|-------------------------|
+| 0.0428                 | 0.0040                  |
+| 0.0424                 | 0.0035                  |
+| 0.0412                 | 0.0040                  |
+| 0.0411                 | 0.0035                  |
+| 0.0414                 | 0.0030                  |
+| 0.0404                 | 0.0030                  |
+
+#### Qagent
+```
+--- Ejecutando agente ---
+Recompensa episodio: 1491.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 1814.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 755.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 3239.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 1107.0
+```
+#### NNagent
+```
+--- Ejecutando agente ---
+Recompensa episodio: 608.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 215.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 567.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 612.0
+
+--- Ejecutando agente ---
+Recompensa episodio: 152.0
+```

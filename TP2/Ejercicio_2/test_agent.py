@@ -1,3 +1,4 @@
+#from Optimizado.calcular_rangos import calcular_rangos, guardar_rangos_en_txt
 from ple.games.flappybird import FlappyBird
 from ple import PLE
 import time
@@ -43,9 +44,11 @@ while True:
     print("\n--- Ejecutando agente ---")
     while not done:
         action = agent.act(state_dict)
+        #calcular_rangos(state_dict)
         reward = env.act(action)
         state_dict = env.getGameState()
         done = env.game_over()
         total_reward_episode += reward
         time.sleep(0.03)
+        #guardar_rangos_en_txt()
     print(f"Recompensa episodio: {total_reward_episode}")
